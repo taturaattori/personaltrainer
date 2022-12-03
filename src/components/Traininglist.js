@@ -3,6 +3,8 @@ import {AgGridReact} from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css';
 import moment from "moment/moment";
+import { IconButton } from "@mui/material";
+import { DeleteSharp } from "@mui/icons-material";
 
 export default function Traininglist() {
 
@@ -17,6 +19,14 @@ export default function Traininglist() {
         .catch(err => console.error(err))
     }
 
+    const deleteTraining = (id) => {
+        if (window.confirm('Are you sure?')) {
+        fetch('https://customerrest.herokuapp.com/api/trainings/' + id, {method: 'DELETE'})
+        .then(res => fetchTrainings())
+        .catch(err => console.error(err))
+        }
+    }
+
     const dateFormatter = (params) => {
         return moment(params.value).format('DD/MM/YYYY HH:mm');
     }
@@ -26,6 +36,14 @@ export default function Traininglist() {
     }
 
     const columns = [
+        {
+            headerName: 'Actions',
+            field: 'id',
+            sortable: false,
+            filter: false,
+            floatingFilter: false,
+            cellRenderer: field => <IconButton onClick={() => deleteTraining(field.value)}><DeleteSharp/></IconButton>
+        },
         {
             headerName: 'Date',
             field: 'date',
@@ -44,6 +62,7 @@ export default function Traininglist() {
             field: 'customer',
             valueGetter: nameFormatter
         }
+        
     ]
 
     const gridOptions = {
@@ -66,7 +85,7 @@ export default function Traininglist() {
                 className='ag-theme-material'
                 style={{
                     height: '700px',
-                    width: '43%',
+                    width: '60%',
                     margin: 'auto'
                 }}
             >

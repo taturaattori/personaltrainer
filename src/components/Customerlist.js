@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import {AgGridReact} from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css';
+import AddCustomer from "./AddCustomer";
+import EditCustomer from "./EditCustomer";
+import { IconButton } from "@mui/material";
+import { DeleteSharp } from "@mui/icons-material";
+import AddTraining from "./AddTraining";
+
 
 export default function Customerlist() {
 
     const [customers, setCustomers] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => fetchCustomers(), []);
 
@@ -16,7 +23,73 @@ export default function Customerlist() {
         .catch(err => console.error(err))
     }
 
+    const saveCustomer = (customer) => {
+        fetch('https://customerrest.herokuapp.com/api/customers', 
+        {method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(customer)
+    })
+    .then(res => fetchCustomers())
+    .catch(err => console.error(err))
+    }
+
+    const updateCustomer = (customer, link) => {
+        fetch(link, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customer)
+        })
+        .then(res => fetchCustomers())
+        .catch(err => console.error(err))
+    }
+
+    const deleteCustomer = (link) => {
+        if (window.confirm('Are you sure?')) {
+            fetch(link, {method: 'DELETE'})
+            .then(res => fetchCustomers())
+            .catch(err => console.error(err))
+        }   
+    }
+
+    const addTraining = (training) => {
+        fetch('https://customerrest.herokuapp.com/api/trainings', {
+            method: 'POST',
+            body: JSON.stringify(training),
+            headers: { 
+                'Content-type': 'application/json' 
+            }
+          })
+          .then(res => {
+            setOpen(true);
+          })
+          .catch(err => console.error(err))
+    } 
+    
+
     const columns = [
+        {
+            headerName: 'Actions',
+            valueGetter: (params) => params.data.links[0].href,
+            cellRenderer: params => <EditCustomer updateCustomer={updateCustomer} customer={params.data} url={params.value}/>,
+            width: '100'
+        },
+        {
+            headerName: '',
+            field: 'link',
+            width: '70',
+            valueGetter: (params) => params.data.links[0].href,
+            cellRenderer: params => <IconButton size='small' onClick={() => deleteCustomer(params.value)}><DeleteSharp/></IconButton>
+        },
+        {
+            headerName: '',
+            width: '70',
+            valueGetter: (params) => params.data.links[0].href,
+            cellRenderer: params => <AddTraining addTraining={addTraining} url={params.value} customer={params.data}/>
+        },
         {
             headerName: 'First name',
             field: 'firstname',
@@ -66,6 +139,7 @@ export default function Customerlist() {
             filter: true,
             floatingFilter: true
         }
+        
     ]
 
     const gridOptions = {
@@ -81,6 +155,7 @@ export default function Customerlist() {
 
     return (
         <div>
+            <AddCustomer saveCustomer={saveCustomer} />
             <div
                 className='ag-theme-material'
                 style={{
