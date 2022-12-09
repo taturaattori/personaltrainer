@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -38,7 +38,7 @@ export default function EditCustomer(props) {
 
     return(
         <div>
-            <IconButton variant="outlined" onClick={handleClickOpen}><EditSharp/></IconButton>
+            <Tooltip disableFocusListener title="Edit customer"><IconButton variant="outlined" onClick={handleClickOpen}><EditSharp/></IconButton></Tooltip>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Edit Customer</DialogTitle>
                 <DialogContent>

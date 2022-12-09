@@ -4,9 +4,10 @@ import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css';
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DeleteSharp } from "@mui/icons-material";
 import AddTraining from "./AddTraining";
+import ExportCSV from "./ExportCSV";
 
 
 export default function Customerlist() {
@@ -82,7 +83,7 @@ export default function Customerlist() {
             field: 'link',
             width: '70',
             valueGetter: (params) => params.data.links[0].href,
-            cellRenderer: params => <IconButton size='small' onClick={() => deleteCustomer(params.value)}><DeleteSharp/></IconButton>
+            cellRenderer: params => <Tooltip disableFocusListener title="Delete customer"><IconButton size='small' onClick={() => deleteCustomer(params.value)}><DeleteSharp/></IconButton></Tooltip>
         },
         {
             headerName: '',
@@ -156,6 +157,7 @@ export default function Customerlist() {
     return (
         <div>
             <AddCustomer saveCustomer={saveCustomer} />
+            <ExportCSV customers={customers} />
             <div
                 className='ag-theme-material'
                 style={{

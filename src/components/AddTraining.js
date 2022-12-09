@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Tooltip } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -37,7 +37,7 @@ export default function AddTraining(props) {
 
     return(
         <div>
-            <IconButton variant="outlined" onClick={handleClickOpen}><AddBox/></IconButton>
+            <Tooltip disableFocusListener title="Add training"><IconButton variant="outlined" onClick={handleClickOpen}><AddBox/></IconButton></Tooltip>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New training</DialogTitle>
                 <DialogContent>
